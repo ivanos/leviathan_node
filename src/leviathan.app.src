@@ -1,0 +1,16 @@
+{application, leviathan,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  erl_sshd,
+                  dobby,
+                  dobby_rest,
+                  lucet
+                  %% leviathan_lib
+                 ]},
+  {env, []}
+ ]}.
