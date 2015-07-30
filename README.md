@@ -53,7 +53,7 @@ to the `erl_sshd` section of `config/sys.config`.
 ## Running
 
 ```
-_rel/leaviathan/bin/leaviathan
+_rel/leviathan/bin/leviathan
 ```
 
 To access the Dobby Visualizer go to http://localhost:8080/static/www/index.html
