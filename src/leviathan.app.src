@@ -9,8 +9,8 @@
                   erl_sshd,
                   dobby,
                   dobby_rest,
-                  lucet
-                  %% leviathan_lib
+                  lucet,
+                  leviathan_lib
                  ]},
   {env, []}
  ]}.
