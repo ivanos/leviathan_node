@@ -10,7 +10,8 @@
                   dobby,
                   dobby_rest,
                   lucet,
-                  leviathan_lib
+                  leviathan_lib,
+                  leviathan_rest
                  ]},
   {env, []}
  ]}.
