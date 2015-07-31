@@ -6,7 +6,7 @@ This is an Erlang node that contains:
 1. [dobby_core_lib](https://github.com/ivanos/dobby_core_lib)
 2. [dobby_rest_lib](https://github.com/ivanos/dobby_rest_lib)
 3. [dobby_ui_lib](https://github.com/ivanos/dobby_ui_lib)
-1. [lucet_core_lib](https://github.com/ivanos/lucet)
+1. [lucet_core_lib](https://github.com/ivanos/lucet_core_lib)
 1. [leviathan_lib](https://github.com/ivanos/leviathan_lib)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
