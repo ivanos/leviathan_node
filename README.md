@@ -9,9 +9,6 @@ This is an Erlang node that contains:
 1. [lucet_core_lib](https://github.com/ivanos/lucet)
 1. [leviathan_lib](https://github.com/ivanos/leviathan_lib)
 
-> leviathan_lib is currently not included in this node as it is not implemented yet. 
-
-
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
 **Table of Contents**
 
