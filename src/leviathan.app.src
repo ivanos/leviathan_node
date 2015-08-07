@@ -6,9 +6,11 @@
   {applications, [
                   kernel,
                   stdlib,
+                  runtime_tools,
                   erl_sshd,
                   dobby,
                   dobby_rest,
+                  ivanos_rest,
                   lucet,
                   leviathan_lib,
                   leviathan_rest
