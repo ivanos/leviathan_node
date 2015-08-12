@@ -6,6 +6,8 @@
   {applications, [
                   kernel,
                   stdlib,
+                  lager_websocket,
+                  lager,
                   runtime_tools,
                   erl_sshd,
                   dobby,
