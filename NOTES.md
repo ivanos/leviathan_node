@@ -42,7 +42,7 @@ URI | Method | Body | Description
 
 1. Load this file into Leviathan with the following command:
  ```curl -d @/tmp/cpool.json http://<lev_host>:8080/cpool```
-2. Check the host machine and running containers.  The JSON file in this example will create six container and two bridges ```cen1``` and ```cen2```.  Three (of six) containers will be added  to ``cen1`` and six (of six) containers to  ```cen2```. It will assign IP Addresses of the form ```10.7.X.Y``` to ```cen1``` and ```10.8.X.Y``` to ```cen2```.
+2. Check the host machine and running containers.  The JSON file in this example will create six containers and two bridges ```cen1``` and ```cen2```.  Three (of six) containers will be added  to ``cen1`` and six (of six) containers to  ```cen2```. It will assign IP Addresses of the form ```10.7.X.Y``` to ```cen1``` and ```10.8.X.Y``` to ```cen2```.
 You can see the bridges and interfaces  created on the host by running:
 ```ip a```
 You can see the interfaces created in the containers and their IP Addresses by running:
