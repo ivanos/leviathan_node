@@ -2,7 +2,8 @@
 
 ## New in 0.7.1: container pools for tesing
 
-In order to 
+In order to test Leviathan in isolation (i.e. no requirement for other ochestration tools), 0.7.1 instruces support for container pools (cpools).  By defining a cpool, some number of containers with a specific tag will be started and added to specific container ip networks (CINs).   A RESTful API ```/cpool`` is added to upload a list of cpools, start the containers and wire the network accordingly.  Using this facility the tester does not have to keep track of ContainerIDs.
+
 ## API
 URI | Method | Body | Description
 --- | ------ | ---- | -----------
@@ -19,7 +20,7 @@ URI | Method | Body | Description
  }
 ```
 
-## Example CPool JSON File
+## Example CPool JSON File (e.g. ```cpool.json```)
 ```
 {"cpoolList":
  [
@@ -35,6 +36,19 @@ URI | Method | Body | Description
  ]
 }
 ```
+## Example of using ```/cpool``
+
+1. Load this file into Leviathan with the following command:
+ ```curl -d @/tmp/cpool.json http://<lev_host>:8080/cpool```
+2. Check the host machine and running containers.  The JSON file in this example will create six container and two bridges ```cen1``` and ```cen2```.  Three (of six) containers will be added  to ``cen1`` and six (of six) containers to  ```cen2```. It will assign IP Addresses of the form ```10.7.X.Y``` to ```cen1``` and ```10.8.X.Y``` to ```cen2```.
+You can see the bridges and interfaces  created on the host by running:
+```ip a```
+You can see the interfaces created in the containers and their IP Addresses by running:
+```docker exec <container id> ip a```
+5.  Exec into various containers that are members of *the same CIN* and try to have them ping one another
+5.  Try to ping containers from the host
+6.  Remove the networking components from the host machine and running containers:
+```curl -d '["cen1","cen2"]' http://<lev_host>:8080/cin/destroy```
 
 ## Other notes:
 
