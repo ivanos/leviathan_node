@@ -30,7 +30,7 @@ URI | Method | Body | Description
       "type":"ubuntu:14.04",
       "start_with": 3,
       "cins":[{"cinID":"cen1","default_route":"true"},
-	      {"cinID":"cen2"}]},
+              {"cinID":"cen2"}]},
      {"cpoolID":"pool2",
       "type":"ubuntu:14.04",
       "start_with": 3,
