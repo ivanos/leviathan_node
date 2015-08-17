@@ -20,7 +20,7 @@ URI | Method | Body | Description
  }
 ```
 
-## Example CPool JSON File (e.g. ```cpool.json```)
+## Example CPool JSON File (e.g. ```cpool.json``` )
 ```
 {"cpoolList":
  [
