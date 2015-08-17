@@ -1,9 +1,9 @@
-### Leviathan 0.7.1 Release notes
+# Leviathan 0.7.1 Release notes
 
 ## New in 0.7.1: container pools for tesing
 
 In order to 
-# API
+## API
 URI | Method | Body | Description
 --- | ------ | ---- | -----------
 /cpool | POST | JSON file | upload CPool JSON file
