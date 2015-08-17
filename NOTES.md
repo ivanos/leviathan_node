@@ -1,4 +1,9 @@
-### Leviathan 0.7 Release notes
+### Leviathan 0.7.1 Release notes
+
+## New in 0.7.1: Container Pools for tesing
+
+## NOTES:
+
 The examples listed in the DockerHub documentation for 0.7 [https://hub.docker.com/r/ivanos/leviathan/](https://hub.docker.com/r/ivanos/leviathan/) uses the CEN JSON format with the CIN API calls.  This is correct for this release, but expect the JSON format for CINs to be slightly different in the next release. For example the use of ```cinID``` rather than ```cenID```.
 
 Leviathan will create /16 CINs with 65511 usable IP addresses per CIN.  Leviathan will assign an IP address in the form: ```10.X.Y.Z``` where ```X``` is in the range 7-250 and ```Y.Z```  is in the range 0.10-255.240
