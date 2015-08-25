@@ -2,7 +2,20 @@
 
 ## New in 0.8
 
+* Incremental container membership via ```docker run``` environment variable ```LEV_CIN```
 
+To add Docker container to a Leviathian Conatiner IP Network (CIN), set the container environment variable ```LEV_CIN``` with ```LEV_CIN=<cin1>,<cin2>,...,<cinN>```.  You must also set ```--net=none```.
+
+For example:
+
+```
+docker run --net=none -i -t -e LEV_CIN=cin1 ubuntu:14.04 /bin/bash
+```
+
+**WARNING:** The CIN must already have been created.  There are several ways to do this, the easies is using the Leviathan RESTapi.  
+
+For example
+```curl -X PUT  http://localhost:8080/cen/cen1```
 
 
 ## New in 0.7.1: container pools (cpools) for tesing
