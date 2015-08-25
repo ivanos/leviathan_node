@@ -1,10 +1,15 @@
-# Leviathan 0.7.1 Release notes
+# Leviathan 0.8 Release notes
+
+## New in 0.8
+
+
+
 
 ## New in 0.7.1: container pools (cpools) for tesing
 
 In order to test Leviathan in isolation (i.e. no requirement for other ochestration tools), 0.7.1 introduces support for container pools (cpools).  By defining a cpool, some number of containers with a specific tag will be started and added to specific container ip networks (CINs).   A RESTful API ```/cpool``` is added to upload a list of cpools, start the containers and wire the network accordingly.  Using this facility the tester does not have to keep track of ContainerIDs.
 
-*UNDER CONSTRUCTION: 0.7.1* For this release ```/bin/bash``` will be executed in the containers, but that will be settable in 0.8
+*UNDER CONSTRUCTION: 0.9* For this release ```/bin/bash``` will be executed in the containers, but that will be settable in 0.9
 
 ## API
 URI | Method | Body | Description
