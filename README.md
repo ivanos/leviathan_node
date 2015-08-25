@@ -65,4 +65,4 @@ ssh 127.0.0.1 -p 11155 -i id_rsa
 To exit the Erlang shell obtained via ssh call `exit().`
 
 ## websocket log viewer
-Logs are published to websocket clients connecting to `ws://.../lager/websocket`.  A simple viewer is provided at `http://.../lager/static/index.html`.
+Logs are published to websocket clients connecting to `ws://.../lager/websocket`.  A simple viewer is provided at `http://.../lager/static/www/index.html`.
