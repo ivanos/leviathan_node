@@ -15,7 +15,7 @@ docker run --net=none -i -t -e LEV_CIN=cin1 ubuntu:14.04 /bin/bash
 **WARNING:** The CIN must already have been created.  There are several ways to do this, the easies is using the Leviathan RESTapi.  
 
 For example
-```curl -X PUT  http://localhost:8080/cen/cen1```
+```curl -X PUT  http://localhost:8080/cen/cin1```
 
 
 ## New in 0.7.1: container pools (cpools) for tesing
