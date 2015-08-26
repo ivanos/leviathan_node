@@ -9,13 +9,13 @@ To add Docker container to a Leviathian Conatiner IP Network (CIN), set the cont
 For example:
 
 ```
-docker run --net=none -i -t -e LEV_CIN=cin1 ubuntu:14.04 /bin/bash
+docker run --net=none -i -t -e LEV_CIN=cen1 ubuntu:14.04 /bin/bash
 ```
 
-**WARNING:** The CIN must already have been created.  There are several ways to do this, the easies is using the Leviathan RESTapi.  
+**WARNING:** The CIN must already have been created.  
 
-For example
-```curl -X PUT  http://localhost:8080/cen/cin1```
+You can do this using the instructions here:  
+[https://hub.docker.com/r/ivanos/leviathan/](https://hub.docker.com/r/ivanos/leviathan/)
 
 
 ## New in 0.7.1: container pools (cpools) for tesing
