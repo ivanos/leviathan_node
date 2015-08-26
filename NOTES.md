@@ -22,7 +22,7 @@ docker run --net=none -i -t -e LEV_CIN=cen1 ubuntu:14.04 /bin/bash
 ```
 docker run -v /run:/run -v /var:/host/var -v /proc:/host/proc  --net=host --privileged=true -i -t ivanos/leviathan:rel-0.8
 ```
-2. Create couple of CINS using the Leviathan test tool (you can find cpool.json used in this example here: [https://github.com/ivanos/leviathan_lib/blob/master/cpool.json](https://github.com/ivanos/leviathan_lib/blob/master/cpool.json)
+2. Create couple of CINS using the Leviathan test tool. You can find cpool.json used in this example here: [https://github.com/ivanos/leviathan_lib/blob/master/cpool.json](https://github.com/ivanos/leviathan_lib/blob/master/cpool.json)
 ```
 curl -d@cpool.json http://localhost:8080/cpool
 ```
