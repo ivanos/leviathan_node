@@ -12,11 +12,56 @@ For example:
 docker run --net=none -i -t -e LEV_CIN=cen1 ubuntu:14.04 /bin/bash
 ```
 
-**WARNING:** The CIN must already have been created.  
-
-You can do this using the instructions here:  
+**WARNING:** The CIN must already have been created. You can do this using the instructions here:  
 [https://hub.docker.com/r/ivanos/leviathan/](https://hub.docker.com/r/ivanos/leviathan/)
 
+
+### Try it! ###
+
+1. Launch Leviathan 0.8
+```
+docker run -v /run:/run -v /var:/host/var -v /proc:/host/proc  --net=host --privileged=true -i -t ivanos/leviathan:rel-0.8
+```
+2. Create couple of CINS using the Leviathan test tool (you can find cpool.json used in this example here: [https://github.com/ivanos/leviathan_lib/blob/master/cpool.json](https://github.com/ivanos/leviathan_lib/blob/master/cpool.json)
+```
+curl -d@cpool.json http://localhost:8080/cpool
+```
+3. Ping a container (from the host) to make sure everything is working
+```
+$ ping 10.7.0.10
+PING 10.7.0.10 (10.7.0.10) 56(84) bytes of data.
+64 bytes from 10.7.0.10: icmp_seq=1 ttl=64 time=0.050 ms
+64 bytes from 10.7.0.10: icmp_seq=2 ttl=64 time=0.090 ms
+```
+4. Start a new container and add it to ```cen2``
+```
+$ docker run -i --net=none -e LEV_CIN=cen2 -t ubuntu:14.04 /bin/bash
+root@34fc181ba62d:/#
+```
+5. Visually inspect that the container is a member of ```cen2```
+```
+root@34fc181ba62d:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+89: cen2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether b2:46:3c:1f:fd:83 brd ff:ff:ff:ff:ff:ff
+    inet 10.7.0.16/16 scope global cen2
+       valid_lft forever preferred_lft forever
+    inet6 fe80::b046:3cff:fe1f:fd83/64 scope link tentative 
+       valid_lft forever preferred_lft forever
+```
+6. ping the container from the host
+```
+$ ping 10.7.0.16
+PING 10.7.0.16 (10.7.0.16) 56(84) bytes of data.
+64 bytes from 10.7.0.16: icmp_seq=1 ttl=64 time=0.070 ms
+64 bytes from 10.7.0.16: icmp_seq=2 ttl=64 time=0.075 ms
+64 bytes from 10.7.0.16: icmp_seq=3 ttl=64 time=0.088 ms
+```
 
 ## New in 0.7.1: container pools (cpools) for tesing
 
