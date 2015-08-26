@@ -62,7 +62,11 @@ PING 10.7.0.16 (10.7.0.16) 56(84) bytes of data.
 64 bytes from 10.7.0.16: icmp_seq=2 ttl=64 time=0.075 ms
 64 bytes from 10.7.0.16: icmp_seq=3 ttl=64 time=0.088 ms
 ```
-* If you want to, destroy both ```cen1``` and ```cen2```
+* Browse to the Dobby Visualizer to visually inspect all the Leviathan bindings that make up ```cen1``` and ```cen2```:
+```
+http://localhost:8080/static/www/index.html`
+```
+* If you want to destroy both ```cen1``` and ```cen2```:
 ```
 curl -d'["cen1","cen2"]' http://localhost:8080/cen/destroy
 ```
