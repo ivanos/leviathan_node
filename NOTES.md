@@ -2,23 +2,33 @@
 
 ## New in 0.8.1
 
+Web socket subscription to see IPAM changes in a CEN/CIN:
+
 1. Create CENs
 ```curl -d @cen.json http://localhost:8080/cen```
 2. Connect to the monitor using the simple websocket viewer
 ```http://localhost:8080/leviathan/monitor/test/index.html```
-Create a monitor
-cut-and-paste the JSON below into the input box and click "send"
-Observe the response on the webpage:
+3. Create a monitor
+4. cut-and-paste the JSON below into the input box and click "send"
+5. Observe the response on the webpage:
+```
 RESPONSE: {"type":"response","sequence":"1","response":{"state":[{"tag":null,"ipaddress":"10.7.0.11","containerID":"c2"},{"tag":null,"ipaddress":"10.11.0.10","containerID":"c2"},{"tag":null,"ipaddress":"10.7.0.13","containerID":"c14"},{"tag":null,"ipaddress":"10.7.0.12","containerID":"c13"},{"tag":null,"ipaddress":"10.7.0.10","containerID":"c1"}],"monitorID":"1441765085652924"}}
-Create a new container in a CEN:
-curl -v -X PUT -H "content-type: application/json" http://localhost:8080/host/host1/cA/cen1
-Observe the response on the webpage:
+```
+6. Create a new container in a CEN:
+```curl -v -X PUT -H "content-type: application/json" http://localhost:8080/host/host1/cA/cen1```
+7. Observe the response on the webpage:
+```
 RESPONSE: {"type":"event","monitorID":"undefined","message":[{"tag":null,"ipaddress":"10.7.0.14","containerID":"cA"}],"event":"create"}
-Create another new container in a CEN:
+```
+8. Create another new container in a CEN:
+```
 curl -v -X PUT -H "content-type: application/json" http://localhost:8080/host/host1/cB/cen1
-Observe the response on the webpage:
+```
+9. Observe the response on the webpage:
+```
 RESPONSE: {"type":"event","monitorID":"undefined","message":[{"tag":null,"ipaddress":"10.7.0.15","containerID":"cB"}],"event":"create"}
-
+```
+```
 JSON to create a subscription:
 {
     "type":"start",
@@ -28,7 +38,7 @@ JSON to create a subscription:
         "cinID":"cen1"
     }
 } 
-
+```
 
 ## New in 0.8
 
