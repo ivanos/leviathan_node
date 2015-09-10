@@ -14,6 +14,17 @@ http://localhost:8080/leviathan/monitor/test/index.html
 ```
 3. Create a monitor
 4. cut-and-paste the JSON below into the input box and click "send"
+```
+JSON to create a subscription:
+{
+    "type":"start",
+    "sequence":"1",
+    "monitor":"CIN",
+    "parameters":{
+        "cinID":"cen1"
+    }
+} 
+```
 5. Observe the response on the webpage:
 ```
 RESPONSE: {"type":"response","sequence":"1","response":{"state":[{"tag":null,"ipaddress":"10.7.0.11","containerID":"c2"},{"tag":null,"ipaddress":"10.11.0.10","containerID":"c2"},{"tag":null,"ipaddress":"10.7.0.13","containerID":"c14"},{"tag":null,"ipaddress":"10.7.0.12","containerID":"c13"},{"tag":null,"ipaddress":"10.7.0.10","containerID":"c1"}],"monitorID":"1441765085652924"}}
@@ -32,17 +43,7 @@ curl -v -X PUT -H "content-type: application/json" http://localhost:8080/host/ho
 ```
 RESPONSE: {"type":"event","monitorID":"undefined","message":[{"tag":null,"ipaddress":"10.7.0.15","containerID":"cB"}],"event":"create"}
 ```
-```
-JSON to create a subscription:
-{
-    "type":"start",
-    "sequence":"1",
-    "monitor":"CIN",
-    "parameters":{
-        "cinID":"cen1"
-    }
-} 
-```
+
 
 ## New in 0.8
 
