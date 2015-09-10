@@ -35,7 +35,7 @@ RESPONSE: {"type":"response","sequence":"1","response":{"state":[{"tag":null,"ip
 ```
 RESPONSE: {"type":"event","monitorID":"undefined","message":[{"tag":null,"ipaddress":"10.7.0.14","containerID":"cA"}],"event":"create"}
 ```
-* Create another new container in a CEN:
+* Create another new container in a CEN. There are many ways to do this here is one:
 ```
 curl -v -X PUT -H "content-type: application/json" http://localhost:8080/host/host1/cB/cen1
 ```
