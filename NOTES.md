@@ -5,9 +5,13 @@
 Web socket subscription to see IPAM changes in a CEN/CIN:
 
 1. Create CENs
-```curl -d @cen.json http://localhost:8080/cen```
+```
+curl -d @cen.json http://localhost:8080/cen
+```
 2. Connect to the monitor using the simple websocket viewer
-```http://localhost:8080/leviathan/monitor/test/index.html```
+```
+http://localhost:8080/leviathan/monitor/test/index.html
+```
 3. Create a monitor
 4. cut-and-paste the JSON below into the input box and click "send"
 5. Observe the response on the webpage:
