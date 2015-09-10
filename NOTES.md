@@ -2,9 +2,9 @@
 
 ## New in 0.8.1
 
-* Create CENs
+1. Create CENs
 ```curl -d @cen.json http://localhost:8080/cen```
-* Connect to the monitor using the simple websocket viewer
+2. Connect to the monitor using the simple websocket viewer
 ```http://localhost:8080/leviathan/monitor/test/index.html```
 Create a monitor
 cut-and-paste the JSON below into the input box and click "send"
