@@ -4,7 +4,7 @@
 
 Web socket subscription to see IPAM changes in a CEN/CIN:
 
-* Create CENs
+* Create CENs. There are many ways to do this here is one:
 ```
 curl -d @cen.json http://localhost:8080/cen
 ```
