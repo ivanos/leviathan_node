@@ -8,6 +8,7 @@ This is an Erlang node that contains:
 3. [dobby_ui_lib](https://github.com/ivanos/dobby_ui_lib)
 1. [lucet_core_lib](https://github.com/ivanos/lucet_core_lib)
 1. [leviathan_lib](https://github.com/ivanos/leviathan_lib)
+1. [erl_cowboy](https://github.com/ivanos/erl_cowboy)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
 **Table of Contents**
@@ -17,9 +18,8 @@ This is an Erlang node that contains:
     - [Building](#building)
     - [Running](#running)
     - [Connecting via ssh](#connecting-via-ssh)
-
-<!-- markdown-toc end -->
-
+    - [websocket log viewer](#websocket-log-viewer)
+    - [Configuring TLS](#configuring-tls)
 
 ## Requirements
 - Erlang R17+
@@ -66,3 +66,37 @@ To exit the Erlang shell obtained via ssh call `exit().`
 
 ## websocket log viewer
 Logs are published to websocket clients connecting to `ws://.../lager/websocket`.  A simple viewer is provided at `http://.../lager/static/www/index.html`.
+
+## Configuring TLS
+
+To enable TLS support for the HTTP interface you have to configure it in the `erl_cowboy`
+application and provide the following options:
+
+* certificate file name (expected in the `priv/erl_cowboy`)
+* key file name (expected in the `priv/erl_cowboy`)
+* password to the key if it is password protected
+
+The configuration has to be placed in the sys.config file. Below is an example:
+```erlang
+[
+...
+ {erl_cowboy, [
+               {port, 8080},
+               {listeners, 10},
+               {app, leviathan},
+               {tls_enabled, true},
+               {tls_opts, [{certfile, "dummy.crt"},
+                           {keyfile, "dummy.key"},
+                           {password, ""}]}
+               ]},
+...
+]
+```
+
+There is a sample certificate and key generator that you can run with:
+`make tls`.
+The above example config works with the generated files. To test the TLS,
+put the config snippet into the `config/sys.config`. Remember
+to re-generated the release after the change.
+
+With TLS enabled, the Visualizer can be accessed via https://localhost:8080/static/www/index.html.
