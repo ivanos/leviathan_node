@@ -26,3 +26,6 @@ rebar:
 
 id_rsa:
 	deps/erl_sshd/make_keys
+
+tls:
+	deps/erl_cowboy/make_tls.sh
