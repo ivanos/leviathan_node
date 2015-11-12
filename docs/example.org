@@ -1,0 +1,194 @@
+#+OPTIONS: toc:2   
+
+* Get Linux with Docker
+The following tutorial was tested with Ubuntu 14.04-amd64 running as VM in VirtualBox. The VM was installed through Vagrant from [[https://github.com/phusion/open-vagrant-boxes][phusion Vagrant box]]. To get this image install Vagrant and run:
+: vagrant init phusion/ubuntu-14.04-amd64
+
+It is also useful to have `brctl` utility that is a part of `bridge-utils` package. To install it run:
+: sudo apt-get install bridge-utils
+
+To be albo to run docker commands without sudo, add the /vagrant/ user to the /docker/ group.
+: sudo usermod -a -G docker vagrant
+
+
+* Build and run Docker image with Leviathan
+: docker run -v /run:/run -v /var:/host/var -v /proc:/host/proc --net=host --privileged=true -i -t ivanos/leviathan:rel-0.8.1
+Leviathan REST API should be accessible on [[http://localhost:8080]].
+Leviathan network visualizer should be accessible on [[http://localhost:8080/static/www/index.html]]
+
+Note that if you are running Leviathan inside a VM, and want to access the visualizer from the host, a host port has to be mapped to 8080 guest port. Putting the following lines into the Vagrant file works:
+: config.vm.network "forwarded_port", guest: 8080, host: 8080
+
+
+* Create 2 networks from 3 Docker containers with Leviathan
+All the commands are run from the host OS.
+
+1. Start 3 Docker containers ("cont1, cont2, cont3}) that run a Bash process. The containers has to be started without networking enabled:
+   : for i in `seq 1 3`; do docker run --net=none -di --name cont$i ubuntu:14.04 /bin/bash; done
+
+2. Create a JSON file describing the networks to be created by Leviathan
+   #+BEGIN_SRC json
+   {
+    "cenList": [
+        {
+            "cenID": "cen1",
+            "containerIDs": [
+                "cont1",
+                "cont2"
+            ]
+        },
+        {
+            "cenID": "cen2",
+            "containerIDs": [
+                "cont2",
+                "cont3"
+            ]
+        }
+    ]
+   }
+   #+END_SRC
+
+   /CEN/ is the Container Ethernet Network. The file describes two such networks with 2 containers each. One of the containers - /cont2/ is a member of two networks.
+
+3. Load the JSON file describing the /CENs/ into Leviathan through its REST API:
+   : curl -d @/vagrant/cen.json http://localhost:8080/cen/import
+   
+   This will create Leviathan internal representation of the CENs.
+
+4. Display /cont2/ in the visualizer:
+
+   Figure 1 illustrates the nearest neighbours of the /lev_cen>cen1/
+   #+BEGIN_CENTER
+   [[file:img/cen1.png]]
+   *Figure 1*
+   #+END_CENTER
+
+   1) Open [[http://localhost:8080/static/www/index.html]] and type in /lev_cont>host1>cont2/ (without the quotes) in the pop-up window. A node will appear.
+   2) Double-click on it, 4 nodes will appear. Two of them represent the container interfaces belonging to 2 different /CENs/:
+      - /lev_endpoint>host1>cont2.0i/
+      - /lev_endpoint>host1>cont2.1i/
+      The "i" at the end of these names indicate that they are *inside* the container.
+   3) Double-click on /lev_endpoint>host1>cont2.0i/ - that will show another interface: /lev_endpoint>host1>cont2.0o/. This time the interface ends with "o" which indicates an interface "outside the container" - i.e. on the host machine. This is the other end of the /veth interfaces pair/ that consist of those two interfaces: *inside* and *outside*.
+   4) Double-click on the outside interface - it reveals a node for a bridge.
+   5) Double-clinking on the brindge in turn, shows that it is connected to the /lev_cen>cen1/ identifier.
+
+5. Look at the Containers networking configuration and the host OS networking configuration:
+   : docker exec cont2 ip a
+   It has only loopback interface configured.
+   : ip a
+   There are no bridges.
+
+6. Create the actual networking components on the host machine that will wire the containers according to the configuration provided in the JSON file:
+   : curl -d '["cen1","cen2"]' http://localhost:8080/cen/make
+   Leviathan logs show subsequent commands that are applied to the host OS as well containers.
+
+7. Examine the containers and the OS networking:
+   #+BEGIN_SRC 
+   docker exec cont2 ip addr show
+   docker exec cont1 ip addr show
+   ip a
+   brctl show
+   #+END_SRC
+
+   The containers should now have interfaces configured, with names the same as the /CENs/ that they are in. However the interfaces have no IP addresses assigned. Note also that the *outside* interfaces are attached to bridges which namese are the same as/CENs/ names.
+
+8. Create /CINs/ spanning /CENs/
+   To make /CENs/ useful, their containers need IP addresses. A /CIN/ stands for Container IP Network and contains /CENs/, which in turn have Containers that can talk to each other. The following commands build the /CINs/ representation in Leviathan and assign IP addresses to the Containers:
+   #+BEGIN_SRC bash
+   curl -d '{"cin1":["cen1"], "cin2":["cen2"]}' http://localhost:8080/cin/import
+   #+END_SRC
+
+9. Display /CIN1/ in the visualize
+   Look for the /lev_cin>cin1/ node in the Dobby Visualizer. Its nearest neighbours should be IP addresses it contains and the CENs it spans.
+   
+   Figure 2 illustrates the nearest neighbours of the /lev_cen>cin1/
+   #+BEGIN_CENTER
+   [[file:img/cin1.png]]
+   *Figure 2*
+   #+END_CENTER
+
+10. Make the CINs
+    : curl -d '["cin1","cin2"]' http://localhost:8080/cin/make
+
+    Now the IP addresses should be assinged to the interfaces
+
+11. Try to ping two containers within the same CIN
+    First note down the interfaces IPs of the Containers in the same CINs and invoke the ping command:
+    : docker exec cont2 ping -c 3 10.10.0.11 # ping cont1 from cont2
+    : docker exec cont2 ping -c 3 10.11.0.10 # ping cont3 from cont2 
+
+12. Remove the addressing and the networking components:
+    : curl -d '["cin1","cin2"]' http://localhost:8080/cin/destroy
+    : curl -d '["cen1","cen2"]' http://localhost:8080/cen/destroy
+
+13. Clear all the data about CINs/CENs stored in leviathan (this time from the Erlang shell of Leviathan):
+    #+BEGIN_SRC erlang
+    dby_db:clear(), leviathan_db:clear().
+    #+END_SRC
+
+14. Stop and remove the containers
+    : for i in `seq 1 3`; do docker rm -f cont$i; done
+
+
+* Build Docker image for LINC-Switch
+To complete the next parf of the tutorial, in which we will be swtiching traffic between two CINs, an image with LINC-Switch is required. The Docker file for this image can be found [[https://github.com/ivanos/dockerfiles/tree/linc-dockerfile/linc][here]]. To build the image run:
+#+BEGIN_SRC 
+git clone https://github.com/ivanos/dockerfiles && cd dockerfiles/linc
+docker build -t local/linc .
+#+END_SRC
+The /local/linc/ is an image name that Leviathan will look for when trying to start a switch.
+
+
+* Create 2 docker containers networks with routing using Leviathan
+1. Run the container with Leviathan as described in one of the previous steps.
+
+2. Create a JSON file describing two collections of CINs (/CPOOLs/) -  /cpool.json/:
+   #+BEGIN_SRC json
+    {"cpoolList":
+    [
+        {"cpoolID":"pool1",
+         "type":"ubuntu:14.04",
+         "start_with": 3,
+         "cins":[{"cinID":"cen1","default_route":"true"}]},
+        {"cpoolID":"pool2",
+         "type":"ubuntu:14.04",
+         "start_with": 3,
+         "cins":[{"cinID":"cen2"}]}
+    ]
+   }
+   #+END_SRC
+   The above listing decribes 2 CIN pools with 3 containers each.
+
+3. Load the JSON file into Leviathan through the REST API:
+   : curl -d @/vagrant/cpool.json http://localhost:8080/cpool
+
+4. The above command should result in starting 6 containers from /ubuntu:14.04/ image and wiring them appropriately. Check they are really running by displaying 6 recently started containers:
+   : docker ps -n 6
+   To verify that the containers got wired you can run the below command and see if appropriate interfaces are configured:
+   : for i in `docker ps -n 6 -q`; do docker exec $i ip a; done
+   Pining hosts withing a CEN should work.
+
+5. Tell Leviathan to start the container with LINC-Switch
+   #+BEGIN_SRC 
+   leviathan_switch:import_json(
+      #{<<"type">> => <<"local/linc">>,
+        <<"interfaces">> => [<<"cen1">>, <<"cen2">>]}).
+   #+END_SRC
+
+6. Take two containers from different CENs and try to ping them.
+   Containters that are in different CENs has different IPs assigned. The ping should not pass.
+
+7. Install a path between the two containers
+   #+BEGIN_SRC 
+   flowcompiler:setup_flow(<<"lev_cont>host1>4310ff47b15c">>, <<"lev_cont>host1>ebd35c83d557">>).
+   #+END_SRC
+   Now the ping should work.
+
+8. Destrony CINs and clear things up
+   #+BEGIN_SRC 
+   curl -d '["cen1","cen2"]' http://localhost:8080/cin/destroy
+   curl http://localhost:8080/util/clear 
+   for c in `docker ps -n 7 -q`; do docker rm -f $c; done
+   leviathan_db:clear(). % from Erlang shell
+   #+END_SRC
+

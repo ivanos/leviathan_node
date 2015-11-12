@@ -10,7 +10,7 @@ This is an Erlang node that contains:
 1. [leviathan_lib](https://github.com/ivanos/leviathan_lib)
 1. [erl_cowboy](https://github.com/ivanos/erl_cowboy)
 
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
 
 - [Leviathan Node](#leviathan-node)
@@ -20,6 +20,7 @@ This is an Erlang node that contains:
     - [Connecting via ssh](#connecting-via-ssh)
     - [websocket log viewer](#websocket-log-viewer)
     - [Configuring TLS](#configuring-tls)
+    - [Example](#example)
 
 ## Requirements
 - Erlang R17+
@@ -100,3 +101,6 @@ put the config snippet into the `config/sys.config`. Remember
 to re-generated the release after the change.
 
 With TLS enabled, the Visualizer can be accessed via https://localhost:8080/static/www/index.html.
+
+## Example
+An example usage of Leviathan is described in the [example](docs/example.org) file.
