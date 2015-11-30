@@ -10,7 +10,6 @@
                   lager,
                   runtime_tools,
                   erl_sshd,
-                  dobby,
                   dobby_rest,
                   ivanos_rest,
                   lucet,
@@ -18,5 +17,9 @@
                   leviathan_lib,
                   leviathan_rest
                  ]},
+  {mod, {leviathan_app, []}},
+  {included_applications, [
+                           dobby
+                          ]},
   {env, []}
  ]}.
