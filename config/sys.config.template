@@ -1,0 +1,64 @@
+[
+ {leviathan, [
+              %% If the node is slave, uncomment the line below and
+              %% provide correct master node
+              {master_node, {{master_node}}}
+             ]},
+ {leviathan_lib, [
+                  %% uncomment the line below for testing purposes
+                  %% {docker_bin, "cat"},
+                  {tunnel_user, {{tunnel_user}}}
+                 ]},
+ {erl_sshd, [
+             {app, leviathan},
+             {port, 11157},
+             {passwords, [{"lincx","1234"}]}
+            ]},
+ {erl_mnesia, [
+             {options, [persistent]}
+              ]},
+ {erl_cowboy, [
+               {port, 8082},
+               {listeners, 10},
+               {app, leviathan},
+               {tls_enabled, false}
+               %% ,{tls_opts, [{certfile, "dummy.crt"},
+               %%             {keyfile, "dummy.key"},
+               %%             {password, ""}]}
+              ]},
+ {of_driver, [
+              {listen_port, 6655},
+              {callback_module, ofs_handler_driver}
+             ]},
+ {ofs_handler, [
+                {callback_module, weave_ofsh}
+               ]},
+ {lager, [
+          {handlers, [
+                      {lager_console_backend, debug},
+                      {lager_file_backend, [{file, "log/error.log"},
+                                            {level, error},
+                                            {size, 10485760},
+                                            {date, "$D0"},
+                                            {count, 5}]},
+                      {lager_file_backend, [{file, "log/console.log"},
+                                            {level, info},
+                                            {size, 10485760},
+                                            {date, "$D0"},
+                                            {count, 5}]},
+                      {lager_websocket, debug}
+                     ]}
+         ]},
+ {lager_websocket, [
+                    {max_retention_minutes, 5},
+                    {clean_interval_sec, 1},
+                    {new_message_count, 5}
+                   ]},
+ {sasl, [
+         {sasl_error_logger, {file, "log/sasl-error.log"}},
+         {errlog_type, error},
+         {error_logger_mf_dir, "log/sasl"},      % Log directory
+         {error_logger_mf_maxbytes, 10485760},   % 10 MB max file size
+         {error_logger_mf_maxfiles, 5}           % 5 files max
+        ]}
+].

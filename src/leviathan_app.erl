@@ -22,7 +22,7 @@ stop(_State) ->
 
 setup_dobby() ->
     case application:get_env(leviathan, master_node, undefined) of
-        undefined ->
+        N when N == undefined orelse N == node() ->
             %% we are the master => start dobby
             {ok ,_ } = application:ensure_all_started(dobby);
         MasterNode ->
