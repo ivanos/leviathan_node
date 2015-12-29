@@ -11,14 +11,14 @@
                  ]},
  {erl_sshd, [
              {app, leviathan},
-             {port, 11157},
+             {port, 11155},
              {passwords, [{"lincx","1234"}]}
             ]},
  {erl_mnesia, [
              {options, [persistent]}
               ]},
  {erl_cowboy, [
-               {port, 8082},
+               {port, 8080},
                {listeners, 10},
                {app, leviathan},
                {tls_enabled, false}
@@ -27,7 +27,7 @@
                %%             {password, ""}]}
               ]},
  {of_driver, [
-              {listen_port, 6655},
+              {listen_port, 6653},
               {callback_module, ofs_handler_driver}
              ]},
  {ofs_handler, [
