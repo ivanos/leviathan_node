@@ -1,0 +1,3 @@
+-type cen_id() :: string().
+-type cin_id() :: string().
+-type host_id() :: string().

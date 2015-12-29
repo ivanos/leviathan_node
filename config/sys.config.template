@@ -9,6 +9,9 @@
                   %% {docker_bin, "cat"},
                   {tunnel_user, {{tunnel_user}}}
                  ]},
+ {leviathan_rest, [
+                   {callback_module, lev_executive}
+                  ]},
  {erl_sshd, [
              {app, leviathan},
              {port, 11155},
