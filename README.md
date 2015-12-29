@@ -102,5 +102,5 @@ to re-generated the release after the change.
 
 With TLS enabled, the Visualizer can be accessed via https://localhost:8080/static/www/index.html.
 
-## Example
-An example usage of Leviathan is described in the [example](docs/example.org) file.
+## Examples
+Examples of Leviathan usage can be found in [docs](docs/).

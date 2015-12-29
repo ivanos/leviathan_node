@@ -1,0 +1,166 @@
+* Configuration
+To run this demo use the [[https://github.com/mentels/Leviathan-Cluster][Leviathan Cluster]]. It comes with three hosts, each running an instance of Leviathan docker container and two containers with ubuntu. The leviathan1 hosts also comes with LINC images pulled.
+
+The HTTP request should be run from the Leviathan1.
+
+* SCENARIO 1: 2 Hosts, 2 CENs
+
+** Topology configuration
+#+BEGIN_SRC 
+{
+    "cenList": [
+        {
+            "cenID": "cen1",
+            "containerIDs": [
+                {"cont1": "192.169.0.101"},
+                {"cont3": "192.169.0.102"}
+            ]
+        },
+        {
+            "cenID": "cen2",
+            "containerIDs": [
+                {"cont2": "192.169.0.101"},
+                {"cont4": "192.169.0.102"}
+            ]
+        }
+    ]
+}
+#+END_SRC
+
+
+** Setting up CENs
+#+BEGIN_SRC 
+curl -d @/vagrant/json/two_hosts_two_cens.json http://localhost:8080/cen/import
+curl -d '["cen1","cen2"]' http://localhost:8080/cen/make
+#+END_SRC
+
+
+** Setting up CINs
+#+BEGIN_SRC 
+curl -d '{"cin1":["cen1"], "cin2":["cen2"]}' http://localhost:8080/cin/import
+curl -d '["cin1", "cin2"]' http://localhost:8080/cin/make
+#+END_SRC
+
+
+** Setting up routig
+- linc/local has to be built
+- run on leviathan1
+- console
+  #+BEGIN_SRC erlang
+  leviathan_switch:import_json(#{<<"host_id">> => <<"192.169.0.101">>,
+                                  <<"type">> => <<"local/linc">>,
+                                 <<"interfaces">> => [<<"cen1">>, <<"cen2">>]}).
+  flowcompiler:setup_flow(<<"lev_cont>192.169.0.101>cont1">>, <<"lev_cont>192.169.0.102>cont4">>).
+  #+END_SRC
+
+- REST API
+  #+BEGIN_SRC 
+  curl -d '{"host_id": "192.169.0.101", "type": "local/linc", "interfaces": ["cen1", "cen2"]}' http://localhost:8080/switch
+  #+END_SRC
+
+
+** Destroying CINs/CENs
+#+BEGIN_SRC 
+curl -d '["cin1","cin2"]' http://localhost:8080/cin/destroy
+curl -d '["cen1","cen2"]' http://localhost:8080/cen/destroy
+#+END_SRC
+
+
+** Clearning database
+#+BEGIN_SRC 
+dby_db:clear().
+leviathan_db:clear().
+#+END_SRC
+
+
+** Stop LINC container
+#+BEGIN_SRC 
+docker rm -f <LINC_CONTAINER_NAME>
+#+END_SRC
+
+
+* SCENARIO 2: 3 Hosts, 3 CENs
+
+** Topology configuration
+#+BEGIN_SRC 
+{
+    "cenList": [
+        {
+            "cenID": "cen1",
+            "containerIDs": [
+                {"cont1": "192.169.0.101"},
+                {"cont3": "192.169.0.102"}
+            ]
+        },
+        {
+            "cenID": "cen2",
+            "containerIDs": [
+                {"cont2": "192.169.0.101"},
+                {"cont4": "192.169.0.102"}
+            ]
+        },
+        {
+            "cenID": "cen3",
+            "containerIDs": [
+                {"cont2": "192.169.0.101"},
+                {"cont4": "192.169.0.102"},
+                {"cont5": "192.169.0.103"},
+                {"cont6": "192.169.0.103"}
+            ]
+        }
+    ]
+}
+
+#+END_SRC
+
+
+** Setting up CENs
+#+BEGIN_SRC 
+curl -d @/vagrant/json/three_hosts_three_cens.json http://localhost:8080/cen/import
+curl -d '["cen1","cen2", "cen3"]' http://localhost:8080/cen/make
+#+END_SRC
+
+
+** Setting up CINs
+#+BEGIN_SRC 
+curl -d '{"cin1":["cen1"], "cin2":["cen2"], "cin3":["cen3"]}' http://localhost:8080/cin/import
+curl -d '["cin1", "cin2", "cin3"]' http://localhost:8080/cin/make
+#+END_SRC
+
+
+** Setting up routig
+- linc/local has to be built
+- run on leviathan1
+- console
+  #+BEGIN_SRC erlang
+  leviathan_switch:import_json(#{<<"host_id">> => <<"192.169.0.101">>,
+                                  <<"type">> => <<"local/linc">>,
+                                 <<"interfaces">> => [<<"cen1">>, <<"cen2">>, <<"cen3">>]}).
+  flowcompiler:setup_flow(<<"lev_cont>192.169.0.101>cont1">>, <<"lev_cont>192.169.0.103>cont6">>).
+  #+END_SRC
+
+- REST API
+  #+BEGIN_SRC 
+  curl -d '{"host_id": "192.169.0.101", "type": "local/linc", "interfaces": ["cen1", "cen2", "cen3"]}' http://localhost:8080/switch
+  #+END_SRC
+
+
+** Destroying CINs/CENs
+#+BEGIN_SRC 
+curl -d '["cin1","cin2", "cin3"]' http://localhost:8080/cin/destroy
+curl -d '["cen1","cen2", "cen3"]' http://localhost:8080/cen/destroy
+#+END_SRC
+
+
+** Clearning database
+#+BEGIN_SRC 
+dby_db:clear().
+leviathan_db:clear().
+#+END_SRC
+
+
+
+** Stop LINC container
+#+BEGIN_SRC 
+docker rm -f <LINC_CONTAINER_NAME>
+#+END_SRC
