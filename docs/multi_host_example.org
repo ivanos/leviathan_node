@@ -177,12 +177,12 @@ curl -d '["cen1","cen2", "cen3"]' http://localhost:8080/cen/destroy
 
 
 ** Clearning database
-#+BEGIN_SRC 
+Invoke the following commands in one of the Erlang shell of the Leviathan:
+
+#+BEGIN_SRC erlang
 dby_db:clear().
-leviathan_db:clear().
+[spawn(N, fun() -> leviathan_db:clear() end) || N <- nodes()].
 #+END_SRC
-
-
 
 ** Stop LINC container
 #+BEGIN_SRC 
