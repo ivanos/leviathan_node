@@ -3,6 +3,7 @@ To run this demo use the [[https://github.com/mentels/Leviathan-Cluster][Leviath
 
 The HTTP request should be run from the Leviathan1.
 
+
 * SCENARIO 1: 2 Hosts, 2 CENs
 
 ** Topology configuration
@@ -43,20 +44,25 @@ curl -d '["cin1", "cin2"]' http://localhost:8080/cin/make
 
 
 ** Setting up routig
-- linc/local has to be built
-- run on leviathan1
-- console
-  #+BEGIN_SRC erlang
-  leviathan_switch:import_json(#{<<"host_id">> => <<"192.169.0.101">>,
-                                  <<"type">> => <<"local/linc">>,
-                                 <<"interfaces">> => [<<"cen1">>, <<"cen2">>]}).
-  flowcompiler:setup_flow(<<"lev_cont>192.169.0.101>cont1">>, <<"lev_cont>192.169.0.102>cont4">>).
-  #+END_SRC
+These commands has to be run on Leviathan1 which has the local/linc image.
+1. Start the switch using either Erlang shell or the REST API:
+   - console
+     #+BEGIN_SRC erlang
+     leviathan_switch:import_json(#{<<"host_id">> => <<"192.169.0.101">>,
+                                     <<"type">> => <<"local/linc">>,
+                                    <<"interfaces">> => [<<"cen1">>, <<"cen2">>]}).
 
-- REST API
-  #+BEGIN_SRC 
-  curl -d '{"host_id": "192.169.0.101", "type": "local/linc", "interfaces": ["cen1", "cen2"]}' http://localhost:8080/switch
-  #+END_SRC
+     #+END_SRC
+
+   - REST API
+     #+BEGIN_SRC
+     curl -d '{"host_id": "192.169.0.101", "type": "local/linc", "interfaces": ["cen1", "cen2"]}' http://localhost:8080/switch
+     #+END_SRC
+
+2. Compile appropriate flow so that /cont1/ can talk to /cont4/:
+   #+BEGIN_SRC erlang
+   flowcompiler:setup_flow(<<"lev_cont>192.169.0.101>cont1">>, <<"lev_cont>192.169.0.102>cont4">>).
+   #+END_SRC
 
 
 ** Destroying CINs/CENs
@@ -129,20 +135,25 @@ curl -d '["cin1", "cin2", "cin3"]' http://localhost:8080/cin/make
 
 
 ** Setting up routig
-- linc/local has to be built
-- run on leviathan1
-- console
-  #+BEGIN_SRC erlang
-  leviathan_switch:import_json(#{<<"host_id">> => <<"192.169.0.101">>,
-                                  <<"type">> => <<"local/linc">>,
-                                 <<"interfaces">> => [<<"cen1">>, <<"cen2">>, <<"cen3">>]}).
-  flowcompiler:setup_flow(<<"lev_cont>192.169.0.101>cont1">>, <<"lev_cont>192.169.0.103>cont6">>).
-  #+END_SRC
+These commands has to be run on Leviathan1 which has the local/linc image.
+1. Start the switch using either Erlang shell or the REST API:
+   - console
 
-- REST API
-  #+BEGIN_SRC 
-  curl -d '{"host_id": "192.169.0.101", "type": "local/linc", "interfaces": ["cen1", "cen2", "cen3"]}' http://localhost:8080/switch
-  #+END_SRC
+     #+BEGIN_SRC erlang
+     leviathan_switch:import_json(#{<<"host_id">> => <<"192.169.0.101">>,
+                                    <<"type">> => <<"local/linc">>,
+                                    <<"interfaces">> => [<<"cen1">>, <<"cen2">>, <<"cen3">>]}).
+     #+END_SRC
+
+   - REST API
+     #+BEGIN_SRC shell
+     curl -d '{"host_id": "192.169.0.101", "type": "local/linc", "interfaces": ["cen1", "cen2", "cen3"]}' http://localhost:8080/switch
+     #+END_SRC
+
+2. Compile appropriate flow so that /cont1/ can talk to /cont6/:
+   #+BEGIN_SRC erlang
+   flowcompiler:setup_flow(<<"lev_cont>192.169.0.101>cont1">>, <<"lev_cont>192.169.0.103>cont6">>).
+   #+END_SRC
 
 
 ** Destroying CINs/CENs
@@ -164,3 +175,4 @@ leviathan_db:clear().
 #+BEGIN_SRC 
 docker rm -f <LINC_CONTAINER_NAME>
 #+END_SRC
+
