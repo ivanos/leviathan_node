@@ -3,6 +3,19 @@ To run this demo use the [[https://github.com/mentels/Leviathan-Cluster][Leviath
 
 The HTTP request should be run from the Leviathan1.
 
+To see output of Leviathan instances, attach to leviathan containers on each of the boxes:
+
+#+BEGIN_SRC shell
+docker attach leviathan
+#+END_SRC
+
+
+When the boxes are restarted and then want to start the containers we can issue:
+
+#+BEGIN_SRC shell
+docker start `docker ps  -aq`
+#+END_SRC
+
 
 * SCENARIO 1: 2 Hosts, 2 CENs
 
