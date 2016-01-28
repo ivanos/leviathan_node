@@ -1,0 +1,12 @@
+case os:getenv("LEV_DEV") of
+    false ->
+        CONFIG;
+    _ ->
+        CompileTests = [
+                        {src_dirs, ["src", "test"]},
+                        {i, "src/"}
+                       ],
+        {erl_opts, ErlOpts} = lists:keyfind(erl_opts, 1, CONFIG),
+        lists:keystore(erl_opts, 1, CONFIG,
+                       {erl_opts, ErlOpts ++ CompileTests})
+end.

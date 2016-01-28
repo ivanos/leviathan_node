@@ -1,15 +1,15 @@
--module(leviathan_sup).
+-module(lev_cen_sup).
 
 -behaviour(supervisor).
 
 %% API
--export([start_link/0]).
+-export([start_link/0, add_cen_fsm/2]).
 
 %% Supervisor callbacks
 -export([init/1]).
 
 %% Helper macro for declaring children of supervisor
--define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
+-define(CHILD(I, Type, Args), {I, {I, start_link, Args}, permanent, 5000, Type, [I]}).
 
 %% ===================================================================
 %% API functions
@@ -18,15 +18,16 @@
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
+add_cen_fsm(Node, Options) ->
+    supervisor:start_child({?MODULE, Node}, Options).
+
 %% ===================================================================
 %% Supervisor callbacks
 %% ===================================================================
 
 init([]) ->
-    Children = [
-                ?CHILD(lev_executive, worker),
-                ?CHILD(lev_cen_sup, supervisor),
-                ?CHILD(lev_cin_sup, supervisor)
-               ],
-    {ok, { {one_for_one, 5, 10}, Children} }.
+    {ok, {
+       {simple_one_for_one, 5, 10},
+       [?CHILD(lev_cen_fsm, worker, [])]
+      }}.
 
